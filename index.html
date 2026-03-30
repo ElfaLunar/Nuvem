@@ -48,10 +48,7 @@
             let cloudX, cloudY;
             const cloudBaseY = 0.28;
             
-            // ========== NUVEM REDESENHADA - MAIS BONITA E VOLUMOSA ==========
-            // Usaremos muitos círculos com gradientes suaves e efeitos de luz
-            
-            // Função para desenhar uma nuvem espetacular
+            // ========== NUVEM REDESENHADA - SEM BRILHOS DOURADOS ==========
             function drawBeautifulCloud() {
                 const centerX = cloudX;
                 const centerY = cloudY + Math.sin(Date.now() * 0.0015) * 2;
@@ -72,8 +69,7 @@
                     ctx.fill();
                 }
                 
-                // ========== PARTES PRINCIPAIS DA NUVEM (MAIS NATURAL) ==========
-                // Definição dos círculos que formam a nuvem - mais orgânicos
+                // ========== PARTES PRINCIPAIS DA NUVEM ==========
                 const cloudCircles = [
                     // Camada inferior (base)
                     { x: -95, y: 15, rx: 85, ry: 55, intensity: 0.92 },
@@ -107,7 +103,7 @@
                     { x: 135, y: 5, rx: 55, ry: 45, intensity: 0.82 },
                 ];
                 
-                // Primeiro, desenhar todas as partes com gradientes suaves
+                // Desenhar todas as partes com gradientes suaves
                 for (let circ of cloudCircles) {
                     const px = centerX + circ.x;
                     const py = centerY + circ.y;
@@ -120,10 +116,9 @@
                         px, py, rx
                     );
                     
-                    const brightness = 0.85 + pulseIntensity * 0.2;
                     const intensity = circ.intensity;
                     
-                    // Cores da nuvem - branco com tons azulados e rosados
+                    // Cores da nuvem - apenas tons de branco, azul e cinza (sem dourado)
                     gradient.addColorStop(0, `rgba(255, 255, 255, ${0.98 * intensity})`);
                     gradient.addColorStop(0.3, `rgba(245, 248, 255, ${0.92 * intensity})`);
                     gradient.addColorStop(0.6, `rgba(210, 225, 250, ${0.82 * intensity})`);
@@ -135,15 +130,14 @@
                     ctx.fillStyle = gradient;
                     ctx.fill();
                     
-                    // Brilho suave nas bordas
+                    // Brilho suave nas bordas (apenas branco/azul claro)
                     ctx.beginPath();
                     ctx.ellipse(px - 3, py - 4, rx * 0.65, ry * 0.55, 0, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 245, ${0.2 * intensity * pulseIntensity})`;
+                    ctx.fillStyle = `rgba(235, 240, 255, ${0.2 * intensity * pulseIntensity})`;
                     ctx.fill();
                 }
                 
-                // ========== DESTAQUES DE LUZ (HIGHLIGHTS) ==========
-                // Adicionar pontos de brilho intenso na parte superior da nuvem
+                // ========== DESTAQUES DE LUZ (HIGHLIGHTS) - SEM DOURADO ==========
                 const highlightSpots = [
                     { x: -40, y: -45, rad: 18, intense: 0.8 },
                     { x: 0, y: -55, rad: 22, intense: 0.9 },
@@ -162,9 +156,10 @@
                         px - 5, py - 3, 3,
                         px, py, spot.rad
                     );
-                    gradHighlight.addColorStop(0, `rgba(255, 255, 245, ${0.6 * spot.intense * pulseIntensity})`);
-                    gradHighlight.addColorStop(0.5, `rgba(255, 250, 210, ${0.25 * spot.intense * pulseIntensity})`);
-                    gradHighlight.addColorStop(1, `rgba(255, 240, 200, 0)`);
+                    // Apenas tons de branco e azul, sem dourado
+                    gradHighlight.addColorStop(0, `rgba(255, 255, 255, ${0.6 * spot.intense * pulseIntensity})`);
+                    gradHighlight.addColorStop(0.5, `rgba(220, 235, 255, ${0.25 * spot.intense * pulseIntensity})`);
+                    gradHighlight.addColorStop(1, `rgba(180, 210, 255, 0)`);
                     
                     ctx.beginPath();
                     ctx.ellipse(px, py, spot.rad, spot.rad * 0.7, 0, 0, Math.PI * 2);
@@ -184,8 +179,8 @@
                         centerX + xOffset, centerY + yOffset,
                         centerX + xOffset * 1.5, centerY + yOffset + 60
                     );
-                    gradRay.addColorStop(0, `rgba(180, 210, 255, ${0.08 * pulseIntensity})`);
-                    gradRay.addColorStop(1, `rgba(100, 150, 255, 0)`);
+                    gradRay.addColorStop(0, `rgba(150, 190, 255, ${0.08 * pulseIntensity})`);
+                    gradRay.addColorStop(1, `rgba(80, 130, 230, 0)`);
                     
                     ctx.beginPath();
                     ctx.moveTo(centerX + xOffset - 15, centerY + yOffset);
@@ -208,7 +203,7 @@
                 ctx.fillStyle = `rgba(140, 200, 255, ${0.1 + glowIntensity * 0.07})`;
                 ctx.fill();
                 
-                // ========== PARTÍCULAS DE LUZ DENTRO DA NUVEM ==========
+                // ========== PARTÍCULAS DE LUZ DENTRO DA NUVEM (APENAS BRANCO/AZUL) ==========
                 for (let i = 0; i < 180; i++) {
                     const angle = Math.random() * Math.PI * 2;
                     const radius = Math.random() * 140;
@@ -219,13 +214,13 @@
                     
                     ctx.beginPath();
                     ctx.arc(x, y, size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 240, 180, ${alpha})`;
+                    ctx.fillStyle = `rgba(200, 220, 255, ${alpha})`;
                     ctx.fill();
                     
                     if (Math.random() > 0.7) {
                         ctx.beginPath();
                         ctx.arc(x - 1, y - 1, size * 0.5, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(255, 255, 220, ${alpha * 0.7})`;
+                        ctx.fillStyle = `rgba(230, 240, 255, ${alpha * 0.7})`;
                         ctx.fill();
                     }
                 }
@@ -243,7 +238,7 @@
                 }
                 ctx.shadowBlur = 0;
                 
-                // ========== DETALHES FINAIS: BRILHOS MINÚSCULOS ==========
+                // ========== DETALHES FINAIS: BRILHOS MINÚSCULOS (APENAS AZUL/BRANCO) ==========
                 for (let i = 0; i < 60; i++) {
                     const x = centerX + (Math.random() - 0.5) * 240;
                     const y = centerY - 20 + Math.random() * 70;
@@ -252,7 +247,7 @@
                     
                     ctx.beginPath();
                     ctx.arc(x, y, size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 210, 150, ${alpha * pulseIntensity})`;
+                    ctx.fillStyle = `rgba(170, 200, 255, ${alpha * pulseIntensity})`;
                     ctx.fill();
                 }
                 
@@ -360,7 +355,7 @@
                 // Estrelas distantes
                 for (let i = 0; i < 200; i++) {
                     if (i % 3 === 0) {
-                        ctx.fillStyle = `rgba(255, 240, 180, ${0.1 + Math.random() * 0.2})`;
+                        ctx.fillStyle = `rgba(180, 200, 255, ${0.1 + Math.random() * 0.2})`;
                         ctx.beginPath();
                         ctx.arc((i * 173) % width, (i * 97) % (height * 0.5), 1, 0, Math.PI * 2);
                         ctx.fill();
@@ -421,7 +416,7 @@
                     
                     if (splash.char && splash.radius > 8) {
                         ctx.font = `${Math.min(16, splash.radius)}px monospace`;
-                        ctx.fillStyle = `rgba(255, 240, 160, ${lifeAlpha * 0.65})`;
+                        ctx.fillStyle = `rgba(200, 230, 255, ${lifeAlpha * 0.65})`;
                         ctx.fillText(splash.char, splash.x - 5, height - 3);
                     }
                 }
