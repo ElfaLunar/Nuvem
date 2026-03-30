@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Nuvem Iluminada - Chuva de Letras e Números</title>
+    <title>Nuvem Celestial - Chuva de Dados</title>
     <style>
         body {
             margin: 0;
@@ -20,21 +20,22 @@
             position: absolute;
             bottom: 20px;
             right: 20px;
-            color: rgba(100, 200, 255, 0.5);
-            font-size: 11px;
+            color: rgba(180, 220, 255, 0.7);
+            font-size: 12px;
             font-family: monospace;
             pointer-events: none;
             z-index: 10;
-            background: rgba(0,0,0,0.4);
-            padding: 4px 12px;
-            border-radius: 20px;
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.3);
+            padding: 6px 14px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <div class="info">☁️ CHUVA DE DADOS ☁️ | LETRAS & NÚMEROS</div>
+    <div class="info">✨ NUVEM LUMINOSA | CHUVA DE CÓDIGO ✨</div>
 
     <script>
         (function() {
@@ -43,59 +44,226 @@
             
             let width, height;
             
-            // ========== CONFIGURAÇÃO DA NUVEM ==========
-            // Nuvem cheia e volumosa - múltiplas camadas para um visual denso
+            // Posição da nuvem
             let cloudX, cloudY;
-            const cloudBaseY = 0.25; // 25% da altura do topo
+            const cloudBaseY = 0.28;
             
-            // Partes da nuvem (círculos sobrepostos para criar uma nuvem cheia e fofa)
-            const cloudParts = [
-                // Camada principal - base larga
-                { xOffset: -0.22, yOffset: 0.00, radius: 0.14, intensity: 0.95 },
-                { xOffset: -0.12, yOffset: -0.03, radius: 0.15, intensity: 1.0 },
-                { xOffset: 0.00, yOffset: -0.06, radius: 0.18, intensity: 1.0 },
-                { xOffset: 0.12, yOffset: -0.03, radius: 0.16, intensity: 1.0 },
-                { xOffset: 0.23, yOffset: 0.00, radius: 0.14, intensity: 0.95 },
-                // Camada superior - mais volume
-                { xOffset: -0.18, yOffset: -0.10, radius: 0.12, intensity: 0.9 },
-                { xOffset: -0.07, yOffset: -0.13, radius: 0.13, intensity: 0.95 },
-                { xOffset: 0.04, yOffset: -0.15, radius: 0.14, intensity: 0.98 },
-                { xOffset: 0.15, yOffset: -0.12, radius: 0.12, intensity: 0.92 },
-                { xOffset: 0.26, yOffset: -0.08, radius: 0.10, intensity: 0.85 },
-                // Camada inferior - para dar mais densidade
-                { xOffset: -0.26, yOffset: 0.06, radius: 0.11, intensity: 0.88 },
-                { xOffset: -0.15, yOffset: 0.08, radius: 0.12, intensity: 0.92 },
-                { xOffset: 0.00, yOffset: 0.05, radius: 0.13, intensity: 0.94 },
-                { xOffset: 0.16, yOffset: 0.07, radius: 0.12, intensity: 0.91 },
-                { xOffset: 0.28, yOffset: 0.04, radius: 0.10, intensity: 0.86 },
-                // Laterais extras
-                { xOffset: -0.32, yOffset: -0.02, radius: 0.09, intensity: 0.82 },
-                { xOffset: 0.33, yOffset: -0.03, radius: 0.09, intensity: 0.83 }
-            ];
+            // ========== NUVEM REDESENHADA - MAIS BONITA E VOLUMOSA ==========
+            // Usaremos muitos círculos com gradientes suaves e efeitos de luz
             
-            // ========== PARTÍCULAS DE CHUVA ==========
+            // Função para desenhar uma nuvem espetacular
+            function drawBeautifulCloud() {
+                const centerX = cloudX;
+                const centerY = cloudY + Math.sin(Date.now() * 0.0015) * 2;
+                
+                // Efeito de iluminação pulsante suave
+                const pulseIntensity = 0.7 + 0.3 * Math.sin(Date.now() * 0.002);
+                const glowIntensity = 0.5 + 0.2 * Math.sin(Date.now() * 0.003);
+                
+                // Camada de brilho externo (glow difuso)
+                ctx.save();
+                ctx.shadowBlur = 0;
+                
+                // Desenhar o glow difuso atrás da nuvem
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.ellipse(centerX, centerY - 8, 190, 85, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(80, 150, 255, ${0.08 - i * 0.02})`;
+                    ctx.fill();
+                }
+                
+                // ========== PARTES PRINCIPAIS DA NUVEM (MAIS NATURAL) ==========
+                // Definição dos círculos que formam a nuvem - mais orgânicos
+                const cloudCircles = [
+                    // Camada inferior (base)
+                    { x: -95, y: 15, rx: 85, ry: 55, intensity: 0.92 },
+                    { x: -45, y: 5, rx: 80, ry: 65, intensity: 0.95 },
+                    { x: 0, y: 0, rx: 95, ry: 75, intensity: 1.0 },
+                    { x: 45, y: 5, rx: 80, ry: 65, intensity: 0.95 },
+                    { x: 90, y: 15, rx: 85, ry: 55, intensity: 0.92 },
+                    
+                    // Camada média (volume)
+                    { x: -115, y: 0, rx: 70, ry: 50, intensity: 0.88 },
+                    { x: -70, y: -15, rx: 75, ry: 60, intensity: 0.93 },
+                    { x: -25, y: -25, rx: 85, ry: 70, intensity: 0.97 },
+                    { x: 25, y: -25, rx: 85, ry: 70, intensity: 0.97 },
+                    { x: 70, y: -15, rx: 75, ry: 60, intensity: 0.93 },
+                    { x: 110, y: 0, rx: 70, ry: 50, intensity: 0.88 },
+                    
+                    // Camada superior (topo fofinho)
+                    { x: -85, y: -35, rx: 65, ry: 50, intensity: 0.9 },
+                    { x: -45, y: -45, rx: 70, ry: 55, intensity: 0.94 },
+                    { x: 0, y: -50, rx: 80, ry: 60, intensity: 0.98 },
+                    { x: 45, y: -45, rx: 70, ry: 55, intensity: 0.94 },
+                    { x: 80, y: -35, rx: 65, ry: 50, intensity: 0.9 },
+                    
+                    // Camada extra para mais volume
+                    { x: -55, y: -60, rx: 55, ry: 45, intensity: 0.86 },
+                    { x: 0, y: -65, rx: 65, ry: 50, intensity: 0.92 },
+                    { x: 55, y: -60, rx: 55, ry: 45, intensity: 0.86 },
+                    
+                    // Laterais mais suaves
+                    { x: -135, y: 5, rx: 55, ry: 45, intensity: 0.82 },
+                    { x: 135, y: 5, rx: 55, ry: 45, intensity: 0.82 },
+                ];
+                
+                // Primeiro, desenhar todas as partes com gradientes suaves
+                for (let circ of cloudCircles) {
+                    const px = centerX + circ.x;
+                    const py = centerY + circ.y;
+                    const rx = circ.rx;
+                    const ry = circ.ry;
+                    
+                    // Gradiente radial para dar volume 3D
+                    const gradient = ctx.createRadialGradient(
+                        px - rx * 0.25, py - ry * 0.2, rx * 0.2,
+                        px, py, rx
+                    );
+                    
+                    const brightness = 0.85 + pulseIntensity * 0.2;
+                    const intensity = circ.intensity;
+                    
+                    // Cores da nuvem - branco com tons azulados e rosados
+                    gradient.addColorStop(0, `rgba(255, 255, 255, ${0.98 * intensity})`);
+                    gradient.addColorStop(0.3, `rgba(245, 248, 255, ${0.92 * intensity})`);
+                    gradient.addColorStop(0.6, `rgba(210, 225, 250, ${0.82 * intensity})`);
+                    gradient.addColorStop(0.85, `rgba(170, 195, 235, ${0.7 * intensity})`);
+                    gradient.addColorStop(1, `rgba(140, 165, 215, ${0.55 * intensity})`);
+                    
+                    ctx.beginPath();
+                    ctx.ellipse(px, py, rx, ry, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                    
+                    // Brilho suave nas bordas
+                    ctx.beginPath();
+                    ctx.ellipse(px - 3, py - 4, rx * 0.65, ry * 0.55, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 245, ${0.2 * intensity * pulseIntensity})`;
+                    ctx.fill();
+                }
+                
+                // ========== DESTAQUES DE LUZ (HIGHLIGHTS) ==========
+                // Adicionar pontos de brilho intenso na parte superior da nuvem
+                const highlightSpots = [
+                    { x: -40, y: -45, rad: 18, intense: 0.8 },
+                    { x: 0, y: -55, rad: 22, intense: 0.9 },
+                    { x: 35, y: -48, rad: 18, intense: 0.8 },
+                    { x: -75, y: -30, rad: 15, intense: 0.7 },
+                    { x: 70, y: -32, rad: 15, intense: 0.7 },
+                    { x: -20, y: -38, rad: 14, intense: 0.75 },
+                    { x: 18, y: -40, rad: 14, intense: 0.75 },
+                ];
+                
+                for (let spot of highlightSpots) {
+                    const px = centerX + spot.x;
+                    const py = centerY + spot.y;
+                    
+                    const gradHighlight = ctx.createRadialGradient(
+                        px - 5, py - 3, 3,
+                        px, py, spot.rad
+                    );
+                    gradHighlight.addColorStop(0, `rgba(255, 255, 245, ${0.6 * spot.intense * pulseIntensity})`);
+                    gradHighlight.addColorStop(0.5, `rgba(255, 250, 210, ${0.25 * spot.intense * pulseIntensity})`);
+                    gradHighlight.addColorStop(1, `rgba(255, 240, 200, 0)`);
+                    
+                    ctx.beginPath();
+                    ctx.ellipse(px, py, spot.rad, spot.rad * 0.7, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = gradHighlight;
+                    ctx.fill();
+                }
+                
+                // ========== EFEITO DE LUZ VOLUMÉTRICA (GOD RAYS SUAVES) ==========
+                ctx.save();
+                ctx.globalCompositeOperation = 'lighter';
+                for (let i = 0; i < 12; i++) {
+                    const angle = -0.8 + i * 0.15;
+                    const xOffset = Math.sin(angle) * 70;
+                    const yOffset = -25 - Math.abs(Math.sin(angle)) * 15;
+                    
+                    const gradRay = ctx.createLinearGradient(
+                        centerX + xOffset, centerY + yOffset,
+                        centerX + xOffset * 1.5, centerY + yOffset + 60
+                    );
+                    gradRay.addColorStop(0, `rgba(180, 210, 255, ${0.08 * pulseIntensity})`);
+                    gradRay.addColorStop(1, `rgba(100, 150, 255, 0)`);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(centerX + xOffset - 15, centerY + yOffset);
+                    ctx.lineTo(centerX + xOffset + 15, centerY + yOffset);
+                    ctx.lineTo(centerX + xOffset * 1.3, centerY + yOffset + 55);
+                    ctx.lineTo(centerX + xOffset * 1.1 - 10, centerY + yOffset + 55);
+                    ctx.fillStyle = gradRay;
+                    ctx.fill();
+                }
+                ctx.restore();
+                
+                // ========== BRILHO PERIFÉRICO (AURÉOLA) ==========
+                ctx.beginPath();
+                ctx.ellipse(centerX, centerY - 8, 210, 95, 0, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(100, 170, 255, ${0.08 + glowIntensity * 0.05})`;
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.ellipse(centerX, centerY - 5, 180, 80, 0, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(140, 200, 255, ${0.1 + glowIntensity * 0.07})`;
+                ctx.fill();
+                
+                // ========== PARTÍCULAS DE LUZ DENTRO DA NUVEM ==========
+                for (let i = 0; i < 180; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = Math.random() * 140;
+                    const x = centerX + Math.cos(angle) * radius * 0.7;
+                    const y = centerY - 15 + Math.sin(angle) * radius * 0.5;
+                    const size = 1.5 + Math.random() * 4;
+                    const alpha = 0.2 + Math.random() * 0.5 * (0.6 + 0.4 * Math.sin(Date.now() * 0.003 + i));
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 240, 180, ${alpha})`;
+                    ctx.fill();
+                    
+                    if (Math.random() > 0.7) {
+                        ctx.beginPath();
+                        ctx.arc(x - 1, y - 1, size * 0.5, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 255, 220, ${alpha * 0.7})`;
+                        ctx.fill();
+                    }
+                }
+                
+                // ========== CONTORNOS SUAVES E SOMBRAS ==========
+                ctx.shadowBlur = 35;
+                ctx.shadowColor = "rgba(80, 130, 220, 0.4)";
+                for (let circ of cloudCircles.slice(0, 5)) {
+                    const px = centerX + circ.x;
+                    const py = centerY + circ.y;
+                    ctx.beginPath();
+                    ctx.ellipse(px, py, circ.rx + 2, circ.ry + 2, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(100, 140, 210, 0.05)`;
+                    ctx.fill();
+                }
+                ctx.shadowBlur = 0;
+                
+                // ========== DETALHES FINAIS: BRILHOS MINÚSCULOS ==========
+                for (let i = 0; i < 60; i++) {
+                    const x = centerX + (Math.random() - 0.5) * 240;
+                    const y = centerY - 20 + Math.random() * 70;
+                    const size = 1 + Math.random() * 2.5;
+                    const alpha = 0.15 + Math.random() * 0.4;
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 210, 150, ${alpha * pulseIntensity})`;
+                    ctx.fill();
+                }
+                
+                ctx.restore();
+            }
+            
+            // ========== CHUVA DE LETRAS E NÚMEROS ==========
             let rainDrops = [];
-            const MAX_RAIN = 400; // bastante gotas para uma chuva densa
+            const MAX_RAIN = 420;
             const CHAR_SET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             
-            // Velocidades variadas
-            const MIN_SPEED = 2.2;
-            const MAX_SPEED = 5.5;
-            
-            // ========== REFLEXOS NO CHÃO ==========
-            let groundSplashes = [];
-            const MAX_SPLASHES = 60;
-            
-            // ========== PARTÍCULAS DE BRILHO ==========
-            let glowParticles = [];
-            const MAX_GLOW = 80;
-            
-            // ========== VARIÁVEIS DE ANIMAÇÃO ==========
-            let timeLight = 0;
-            let cloudFloatY = 0;
-            let floatDirection = 0.002;
-            
-            // ========== FUNÇÕES AUXILIARES ==========
             function randomRange(min, max) {
                 return min + Math.random() * (max - min);
             }
@@ -104,380 +272,255 @@
                 return CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
             }
             
-            // Obter a posição Y da base da nuvem (onde as gotas começam)
-            function getCloudBottomY() {
-                return cloudY + (cloudBaseY * height * 0.15) + Math.sin(cloudFloatY) * 2;
+            function getCloudBottomArea() {
+                return {
+                    left: cloudX - 160,
+                    right: cloudX + 160,
+                    topY: cloudY + 20,
+                    bottomY: cloudY + 55
+                };
             }
             
-            // Obter a largura da nuvem (para distribuir as gotas)
-            function getCloudWidth() {
-                return width * 0.55; // largura aproximada da nuvem
-            }
-            
-            // Inicializar chuva - todas as gotas começam DENTRO da nuvem
             function initRain() {
                 rainDrops = [];
-                const cloudBottom = getCloudBottomY();
-                const cloudLeft = cloudX - getCloudWidth() / 2;
-                const cloudRight = cloudX + getCloudWidth() / 2;
+                const cloudArea = getCloudBottomArea();
                 
                 for (let i = 0; i < MAX_RAIN; i++) {
-                    // Posição X: dentro da largura da nuvem com variação
-                    const x = randomRange(cloudLeft - 15, cloudRight + 15);
-                    // Posição Y: começa de dentro da nuvem (parte inferior e meio)
-                    const yOffset = randomRange(-35, 25);
-                    const y = cloudBottom + yOffset;
-                    
                     rainDrops.push({
-                        x: x,
-                        y: y,
+                        x: randomRange(cloudArea.left - 15, cloudArea.right + 15),
+                        y: randomRange(cloudArea.topY - 10, cloudArea.bottomY + 15),
                         char: randomChar(),
-                        speed: randomRange(MIN_SPEED, MAX_SPEED),
-                        size: randomRange(13, 26),
-                        opacity: randomRange(0.55, 0.95),
-                        angle: randomRange(-0.8, 0.8), // leve inclinação para dar naturalidade
-                        wobble: Math.random() * Math.PI * 2,
-                        wobbleSpeed: randomRange(0.01, 0.04)
+                        speed: randomRange(2.0, 5.8),
+                        size: randomRange(12, 25),
+                        opacity: randomRange(0.6, 0.95),
+                        sway: randomRange(-0.3, 0.3),
+                        swaySpeed: randomRange(0.01, 0.035),
+                        swayPhase: Math.random() * Math.PI * 2
                     });
                 }
             }
             
-            // Adicionar splash no chão
-            function addSplash(x, intensity = 1.0, char = '') {
+            let groundSplashes = [];
+            const MAX_SPLASHES = 70;
+            
+            function addSplash(x, char) {
                 groundSplashes.push({
                     x: x,
                     life: 1.0,
-                    decay: randomRange(0.018, 0.035),
-                    radius: randomRange(6, 18),
+                    decay: randomRange(0.02, 0.04),
+                    radius: randomRange(6, 20),
                     char: char,
-                    alpha: 0.8
+                    alpha: 0.9
                 });
-                if (groundSplashes.length > MAX_SPLASHES) {
-                    groundSplashes.shift();
-                }
+                if (groundSplashes.length > MAX_SPLASHES) groundSplashes.shift();
             }
             
-            // Atualizar chuva
             function updateRain() {
-                const cloudBottom = getCloudBottomY();
-                const cloudLeft = cloudX - getCloudWidth() / 2 - 20;
-                const cloudRight = cloudX + getCloudWidth() / 2 + 20;
+                const cloudArea = getCloudBottomArea();
                 
-                for (let i = 0; i < rainDrops.length; i++) {
-                    const drop = rainDrops[i];
-                    
-                    // Movimento vertical com leve oscilação lateral
+                for (let drop of rainDrops) {
                     drop.y += drop.speed;
-                    drop.x += Math.sin(Date.now() * drop.wobbleSpeed + drop.wobble) * 0.15;
+                    drop.x += Math.sin(Date.now() * drop.swaySpeed + drop.swayPhase) * 0.2 + drop.sway * 0.05;
                     
-                    // Verificar se atingiu o chão
                     if (drop.y > height - 12) {
-                        addSplash(drop.x, drop.speed / MAX_SPEED, drop.char);
+                        addSplash(drop.x, drop.char);
                         
-                        // Reset: volta para DENTRO da nuvem
-                        drop.y = cloudBottom + randomRange(-25, 20);
-                        drop.x = randomRange(cloudLeft, cloudRight);
+                        drop.y = randomRange(cloudArea.topY - 8, cloudArea.bottomY + 12);
+                        drop.x = randomRange(cloudArea.left - 12, cloudArea.right + 12);
                         drop.char = randomChar();
-                        drop.speed = randomRange(MIN_SPEED, MAX_SPEED);
-                        drop.size = randomRange(13, 26);
-                        drop.opacity = randomRange(0.6, 0.95);
+                        drop.speed = randomRange(2.0, 5.8);
+                        drop.size = randomRange(12, 25);
                     }
                     
-                    // Se por algum motivo a gota subiu demais, reposicionar na nuvem
-                    if (drop.y < cloudBottom - 60) {
-                        drop.y = cloudBottom + randomRange(-20, 15);
-                        drop.x = randomRange(cloudLeft, cloudRight);
+                    if (drop.y < cloudArea.topY - 50) {
+                        drop.y = randomRange(cloudArea.topY - 5, cloudArea.bottomY + 10);
+                        drop.x = randomRange(cloudArea.left - 10, cloudArea.right + 10);
                     }
                     
-                    // Manter X dentro de limites razoáveis
-                    if (drop.x < -50) drop.x = -50;
-                    if (drop.x > width + 50) drop.x = width + 50;
+                    drop.x = Math.min(Math.max(drop.x, -40), width + 40);
                 }
                 
-                // Atualizar splashes
-                for (let i = 0; i < groundSplashes.length; i++) {
-                    const splash = groundSplashes[i];
+                for (let splash of groundSplashes) {
                     splash.life -= splash.decay;
-                    splash.radius += 0.7;
+                    splash.radius += 0.65;
                 }
                 groundSplashes = groundSplashes.filter(s => s.life > 0);
             }
             
-            // ========== FUNÇÕES DE DESENHO ==========
-            
-            // Fundo preto com gradiente profundo
+            // ========== DESENHO ==========
             function drawBackground() {
                 const grad = ctx.createLinearGradient(0, 0, 0, height);
-                grad.addColorStop(0, "#020214");
-                grad.addColorStop(0.4, "#000000");
-                grad.addColorStop(0.8, "#030318");
-                grad.addColorStop(1, "#050520");
+                grad.addColorStop(0, "#030318");
+                grad.addColorStop(0.3, "#000000");
+                grad.addColorStop(0.7, "#010114");
+                grad.addColorStop(1, "#050528");
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, width, height);
                 
-                // Estrelas/brilhos distantes (muito sutis)
-                ctx.fillStyle = "rgba(255,255,200,0.15)";
-                for (let i = 0; i < 150; i++) {
-                    if (i % 2 === 0) continue; // só algumas
-                    ctx.beginPath();
-                    ctx.arc((i * 131) % width, (i * 253) % (height * 0.6), 1, 0, Math.PI * 2);
-                    ctx.fill();
+                // Estrelas distantes
+                for (let i = 0; i < 200; i++) {
+                    if (i % 3 === 0) {
+                        ctx.fillStyle = `rgba(255, 240, 180, ${0.1 + Math.random() * 0.2})`;
+                        ctx.beginPath();
+                        ctx.arc((i * 173) % width, (i * 97) % (height * 0.5), 1, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
                 }
             }
             
-            // Desenhar nuvem CHEIA e ILUMINADA
-            function drawCloud() {
-                const centerX = cloudX;
-                const centerY = cloudY + Math.sin(cloudFloatY) * 3;
-                
-                // Iluminação pulsante
-                const glowPulse = 0.65 + 0.35 * Math.sin(timeLight * 0.012);
-                const edgeGlow = 0.5 + 0.3 * Math.sin(timeLight * 0.008);
-                
-                // Desenhar cada parte da nuvem com gradientes ricos
-                for (let part of cloudParts) {
-                    const px = centerX + (part.xOffset * width);
-                    const py = centerY + (part.yOffset * height * 0.22);
-                    const radius = part.radius * Math.min(width, height) * 0.48;
-                    
-                    // Gradiente radial para volume
-                    const grad = ctx.createRadialGradient(
-                        px - radius * 0.25, py - radius * 0.2, radius * 0.15,
-                        px, py, radius
-                    );
-                    
-                    const intensity = part.intensity;
-                    const brightness = 0.8 + glowPulse * 0.3;
-                    
-                    grad.addColorStop(0, `rgba(255, 255, 250, ${0.95 * intensity})`);
-                    grad.addColorStop(0.3, `rgba(210, 225, 255, ${0.9 * intensity})`);
-                    grad.addColorStop(0.6, `rgba(150, 185, 240, ${0.75 * intensity})`);
-                    grad.addColorStop(1, `rgba(100, 130, 200, ${0.55 * intensity})`);
-                    
-                    ctx.beginPath();
-                    ctx.arc(px, py, radius, 0, Math.PI * 2);
-                    ctx.fillStyle = grad;
-                    ctx.fill();
-                    
-                    // Brilho externo (glow)
-                    ctx.save();
-                    ctx.shadowBlur = 28;
-                    ctx.shadowColor = `rgba(80, 160, 255, ${0.35 + edgeGlow * 0.2})`;
-                    ctx.beginPath();
-                    ctx.arc(px, py, radius * 0.92, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(140, 200, 255, ${0.18 + glowPulse * 0.1})`;
-                    ctx.fill();
-                    ctx.restore();
-                }
-                
-                // Adicionar destaques internos (partículas brilhantes dentro da nuvem)
-                for (let i = 0; i < 120; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = Math.random() * 0.38 * Math.min(width, height);
-                    const px = centerX + Math.cos(angle) * dist;
-                    const py = centerY + Math.sin(angle) * dist * 0.6 - 8;
-                    const size = 1.5 + Math.random() * 5;
-                    const alpha = 0.3 + Math.random() * 0.5 * (0.6 + 0.4 * Math.sin(timeLight * 0.02 + i));
-                    
-                    ctx.beginPath();
-                    ctx.arc(px, py, size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 245, 200, ${alpha})`;
-                    ctx.fill();
-                    ctx.shadowBlur = 10;
-                    ctx.fillStyle = `rgba(255, 210, 120, ${alpha * 0.7})`;
-                    ctx.fill();
-                }
-                ctx.shadowBlur = 0;
-                
-                // Borda luminosa suave na base da nuvem (onde a chuva cai)
-                ctx.beginPath();
-                const baseY = centerY + 18;
-                ctx.ellipse(centerX, baseY, getCloudWidth() / 2.2, 12, 0, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(100, 180, 255, ${0.2 + 0.1 * Math.sin(timeLight * 0.02)})`;
-                ctx.fill();
-            }
-            
-            // Desenhar chuva com efeito de brilho
             function drawRain() {
                 for (let drop of rainDrops) {
-                    const flicker = 0.7 + 0.3 * Math.sin(Date.now() * 0.008 + drop.wobble);
+                    const flicker = 0.65 + 0.35 * Math.sin(Date.now() * 0.01 + drop.swayPhase);
                     const alpha = drop.opacity * flicker;
                     
                     ctx.font = `${drop.size}px "Courier New", "Fira Code", monospace`;
                     ctx.shadowBlur = 8;
-                    ctx.shadowColor = `rgba(0, 180, 255, 0.8)`;
-                    ctx.fillStyle = `rgba(80, 210, 255, ${alpha})`;
+                    ctx.shadowColor = `rgba(0, 180, 255, 0.7)`;
+                    ctx.fillStyle = `rgba(70, 210, 255, ${alpha})`;
                     ctx.fillText(drop.char, drop.x, drop.y);
                     
-                    // Efeito de rastro (cauda)
-                    ctx.fillStyle = `rgba(50, 170, 230, ${alpha * 0.4})`;
-                    ctx.fillText(drop.char, drop.x - 1.2, drop.y - drop.size * 0.4);
+                    // Efeito de estela
+                    ctx.fillStyle = `rgba(50, 160, 230, ${alpha * 0.45})`;
+                    ctx.fillText(drop.char, drop.x - 1.2, drop.y - drop.size * 0.35);
                     
-                    // Pequeno brilho extra
-                    ctx.fillStyle = `rgba(180, 240, 255, ${alpha * 0.3})`;
-                    ctx.fillText(drop.char, drop.x + 1, drop.y - 2);
+                    ctx.fillStyle = `rgba(130, 220, 255, ${alpha * 0.3})`;
+                    ctx.fillText(drop.char, drop.x + 0.8, drop.y - 1.5);
                 }
                 ctx.shadowBlur = 0;
             }
             
-            // Desenhar reflexos no chão (splashes + reflexo das letras)
             function drawGroundEffects() {
-                // Piso molhado com gradiente
-                const wetGrad = ctx.createLinearGradient(0, height - 15, 0, height);
-                wetGrad.addColorStop(0, "rgba(30, 60, 100, 0.5)");
-                wetGrad.addColorStop(1, "rgba(10, 30, 60, 0.8)");
+                // Chão molhado
+                const wetGrad = ctx.createLinearGradient(0, height - 18, 0, height);
+                wetGrad.addColorStop(0, "rgba(20, 50, 90, 0.6)");
+                wetGrad.addColorStop(1, "rgba(5, 20, 45, 0.85)");
                 ctx.fillStyle = wetGrad;
-                ctx.fillRect(0, height - 18, width, 18);
+                ctx.fillRect(0, height - 22, width, 22);
                 
-                // Linha de luz no chão
+                // Linha de luz
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(0, 200, 255, ${0.4 + 0.2 * Math.sin(timeLight * 0.02)})`;
-                ctx.lineWidth = 2;
-                ctx.moveTo(0, height - 8);
-                ctx.lineTo(width, height - 8);
+                ctx.strokeStyle = `rgba(70, 190, 255, ${0.5 + 0.2 * Math.sin(Date.now() * 0.003)})`;
+                ctx.lineWidth = 2.5;
+                ctx.moveTo(0, height - 7);
+                ctx.lineTo(width, height - 7);
                 ctx.stroke();
                 
-                // Splashes (respingos)
+                // Splashes
                 for (let splash of groundSplashes) {
                     const lifeAlpha = splash.life * splash.alpha;
-                    const radius = splash.radius;
                     
-                    // Anel externo
                     ctx.beginPath();
-                    ctx.arc(splash.x, height - 7, radius * 0.7, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(70, 180, 255, ${lifeAlpha * 0.5})`;
+                    ctx.arc(splash.x, height - 6, splash.radius * 0.65, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(70, 180, 255, ${lifeAlpha * 0.55})`;
                     ctx.fill();
                     
-                    // Anel interno
                     ctx.beginPath();
-                    ctx.arc(splash.x, height - 7, radius * 0.35, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(150, 220, 255, ${lifeAlpha * 0.7})`;
+                    ctx.arc(splash.x, height - 6, splash.radius * 0.35, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(140, 215, 255, ${lifeAlpha * 0.7})`;
                     ctx.fill();
                     
-                    // Pequeno brilho central
-                    if (splash.char) {
-                        ctx.font = `${Math.min(18, radius)}px monospace`;
-                        ctx.fillStyle = `rgba(255, 240, 180, ${lifeAlpha * 0.6})`;
-                        ctx.fillText(splash.char, splash.x - 5, height - 4);
+                    if (splash.char && splash.radius > 8) {
+                        ctx.font = `${Math.min(16, splash.radius)}px monospace`;
+                        ctx.fillStyle = `rgba(255, 240, 160, ${lifeAlpha * 0.65})`;
+                        ctx.fillText(splash.char, splash.x - 5, height - 3);
                     }
                 }
                 
-                // Reflexo espelhado das letras que estão próximas ao chão
+                // Reflexos das letras no chão
                 ctx.save();
-                ctx.globalAlpha = 0.4;
+                ctx.globalAlpha = 0.45;
                 for (let drop of rainDrops) {
                     const distToGround = height - drop.y;
-                    if (distToGround < 55 && distToGround > 0) {
-                        const refY = height - 8 + (55 - distToGround) * 0.25;
-                        const refAlpha = Math.max(0, 0.55 - distToGround / 90) * drop.opacity;
-                        ctx.font = `${drop.size * 0.7}px monospace`;
-                        ctx.fillStyle = `rgba(100, 210, 255, ${refAlpha})`;
+                    if (distToGround < 60 && distToGround > 0) {
+                        const refY = height - 6 + (60 - distToGround) * 0.22;
+                        const refAlpha = Math.max(0, 0.6 - distToGround / 85) * drop.opacity;
+                        ctx.font = `${drop.size * 0.68}px monospace`;
+                        ctx.fillStyle = `rgba(100, 200, 250, ${refAlpha})`;
                         ctx.save();
-                        ctx.transform(1, 0, 0, -0.5, drop.x, refY);
+                        ctx.transform(1, 0, 0, -0.45, drop.x, refY);
                         ctx.fillText(drop.char, 0, 0);
                         ctx.restore();
                     }
                 }
                 ctx.restore();
                 
-                // Brilho difuso abaixo da nuvem (reflexo da luz da nuvem no chão)
-                const groundGlow = ctx.createLinearGradient(cloudX - 120, height - 20, cloudX + 120, height - 5);
-                groundGlow.addColorStop(0, "rgba(80, 150, 255, 0)");
-                groundGlow.addColorStop(0.5, `rgba(100, 180, 255, ${0.18 + 0.08 * Math.sin(timeLight * 0.015)})`);
-                groundGlow.addColorStop(1, "rgba(80, 150, 255, 0)");
-                ctx.fillStyle = groundGlow;
-                ctx.fillRect(0, height - 25, width, 25);
+                // Reflexo da luz da nuvem no chão
+                const cloudReflection = ctx.createLinearGradient(cloudX - 140, height - 25, cloudX + 140, height - 5);
+                cloudReflection.addColorStop(0, "rgba(100, 160, 255, 0)");
+                cloudReflection.addColorStop(0.5, `rgba(120, 190, 255, ${0.2 + 0.1 * Math.sin(Date.now() * 0.002)})`);
+                cloudReflection.addColorStop(1, "rgba(100, 160, 255, 0)");
+                ctx.fillStyle = cloudReflection;
+                ctx.fillRect(0, height - 30, width, 30);
             }
             
-            // Partículas de luz flutuantes ao redor da nuvem
-            function initGlowParticles() {
-                glowParticles = [];
-                for (let i = 0; i < MAX_GLOW; i++) {
-                    glowParticles.push({
-                        x: randomRange(0, width),
-                        y: randomRange(cloudY - 80, cloudY + 100),
-                        radius: randomRange(1, 4),
-                        alpha: randomRange(0.2, 0.7),
-                        speedY: randomRange(0.1, 0.6),
-                        speedX: randomRange(-0.15, 0.15),
-                        phase: randomRange(0, Math.PI * 2)
+            // Partículas flutuantes
+            let floatingDust = [];
+            const MAX_DUST = 100;
+            
+            function initDust() {
+                for (let i = 0; i < MAX_DUST; i++) {
+                    floatingDust.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height * 0.6,
+                        size: randomRange(1, 3),
+                        alpha: randomRange(0.1, 0.4),
+                        vy: randomRange(0.05, 0.25),
+                        phase: Math.random() * Math.PI * 2
                     });
                 }
             }
             
-            function updateGlowParticles() {
-                for (let p of glowParticles) {
-                    p.y -= p.speedY;
-                    p.x += p.speedX;
-                    
-                    // Reposicionar ao redor da nuvem
-                    if (p.y < cloudY - 100 || p.y > cloudY + 120 || p.x < -50 || p.x > width + 50) {
-                        p.y = cloudY + randomRange(-40, 80);
-                        p.x = randomRange(cloudX - getCloudWidth() / 1.5, cloudX + getCloudWidth() / 1.5);
-                        p.alpha = randomRange(0.2, 0.6);
+            function updateDust() {
+                for (let d of floatingDust) {
+                    d.y -= d.vy;
+                    if (d.y < -20) {
+                        d.y = height * 0.7;
+                        d.x = Math.random() * width;
                     }
-                    
-                    p.currentAlpha = p.alpha * (0.5 + 0.5 * Math.sin(Date.now() * 0.005 + p.phase));
+                    d.currentAlpha = d.alpha * (0.5 + 0.5 * Math.sin(Date.now() * 0.003 + d.phase));
                 }
             }
             
-            function drawGlowParticles() {
-                for (let p of glowParticles) {
+            function drawDust() {
+                for (let d of floatingDust) {
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(180, 220, 255, ${p.currentAlpha * 0.5})`;
-                    ctx.fill();
-                    ctx.shadowBlur = 6;
-                    ctx.fillStyle = `rgba(220, 240, 255, ${p.currentAlpha * 0.3})`;
+                    ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(150, 200, 255, ${d.currentAlpha * 0.4})`;
                     ctx.fill();
                 }
-                ctx.shadowBlur = 0;
             }
             
-            // ========== RESIZE E ANIMAÇÃO ==========
-            function resizeAndReset() {
+            // ========== RESIZE E LOOP ==========
+            function resizeCanvas() {
                 width = window.innerWidth;
                 height = window.innerHeight;
                 canvas.width = width;
                 canvas.height = height;
-                
                 cloudX = width * 0.5;
                 cloudY = height * cloudBaseY;
-                
                 initRain();
-                initGlowParticles();
             }
             
-            // Loop principal
-            let animationFrame;
             function animate() {
-                if (!ctx) return;
-                
-                timeLight++;
-                cloudFloatY += floatDirection;
-                if (Math.abs(cloudFloatY) > 0.7) floatDirection *= -1;
-                
                 updateRain();
-                updateGlowParticles();
+                updateDust();
                 
                 drawBackground();
-                drawCloud();
-                drawGlowParticles();
+                drawBeautifulCloud();
+                drawDust();
                 drawRain();
                 drawGroundEffects();
                 
-                // Pequeno efeito de neblina no chão
-                ctx.fillStyle = "rgba(0, 10, 30, 0.2)";
-                ctx.fillRect(0, height - 40, width, 40);
-                
-                animationFrame = requestAnimationFrame(animate);
+                requestAnimationFrame(animate);
             }
             
             window.addEventListener('resize', () => {
-                resizeAndReset();
+                resizeCanvas();
+                initDust();
             });
             
-            resizeAndReset();
+            resizeCanvas();
+            initDust();
             animate();
         })();
     </script>
